@@ -1,0 +1,5 @@
+C:\inetpub\wwwroot\DNN732-2014-08-30\bin\CapitalsGame.dll
+C:\inetpub\wwwroot\DNN732-2014-08-30\bin\CapitalsGame.pdb
+C:\inetpub\wwwroot\DNN732-2014-08-30\DesktopModules\CapitalsGame\obj\Debug\CapitalsGame.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\DNN732-2014-08-30\DesktopModules\CapitalsGame\obj\Debug\CapitalsGame.dll
+C:\inetpub\wwwroot\DNN732-2014-08-30\DesktopModules\CapitalsGame\obj\Debug\CapitalsGame.pdb
