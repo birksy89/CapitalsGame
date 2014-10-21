@@ -177,22 +177,8 @@
     //var p2 = new google.maps.LatLng(54.5311948, -1.5533484); //Darlington
 
     // Styles
-
-    var mapStyle = [
-  {
-      featureType: "all",
-      elementType: "labels",
-      stylers: [
-        { visibility: "off" }
-      ]
-  }
-    ];
+    var mapStyle = [{ "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "visibility": "on" }, { "saturation": 0 }, { "lightness": 0 }] }, { "featureType": "water", "stylers": [{ "visibility": "on" }, { "lightness": 0 }, { "saturation": 0 }] }, { "featureType": "administrative.province", "elementType": "geometry", "stylers": [{ "visibility": "on" }] }, { "featureType": "administrative.country", "elementType": "geometry", "stylers": [{ "visibility": "on" }] }, { "featureType": "water", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.local", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#000000" }, { "lightness": 90 }] }];
     //End Style
-
-
-
-
-
 
     function initialize() {
         geocoder = new google.maps.Geocoder();
@@ -214,21 +200,13 @@
             position: latlng,
             map: map,
             draggable: true,
-            animation: google.maps.Animation.BOUNCE,
+            //animation: google.maps.Animation.BOUNCE,
             title: "Drag me!"
         });
 
         p2 = latlng;
 
-
-        google.maps.event.addListener(marker, 'drag', function (event) {
-            marker.setAnimation(null);
-        });
-
         google.maps.event.addListener(marker, 'dragend', function (event) {
-            //alert(event.latLng.lat())
-            //alert(event.latLng.lng())
-            marker.setAnimation(null);
             p2 = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
         });
     }
@@ -240,11 +218,14 @@
 
                 p1 = results[0].geometry.location;
 
-                map.setCenter(results[0].geometry.location);
+                //map.setCenter(results[0].geometry.location);
+
+                map.panTo(p1);
+
                 var marker = new google.maps.Marker({
                     map: map,
                     position: results[0].geometry.location,
-                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                    icon: 'http://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
                 });
 
                 calcDistance();
