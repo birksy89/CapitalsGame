@@ -58,7 +58,7 @@
 
 
 
-            <input id="txtDistanceScore" type="hidden" runat="server" value="0" />
+            <input id="txtDistanceScore"  runat="server" value="0" />
 
 
         </div>
@@ -243,7 +243,9 @@
 
         //alert(calcDistance(p1, p2) + " KMs");
 
-        document.getElementById('txtDistance').value = calcDistance(p1, p2);
+        var calculatedDistance = calcDistance(p1, p2);
+
+        document.getElementById('txtDistance').value = calculatedDistance;
 
         //calculates distance between two points in km's
         function calcDistance(p1, p2) {
@@ -253,11 +255,46 @@
 
         //Gives points based on distance away from target
 
-        var earthRadius = 6378137 / 1000;
+        var distanceScore = 0;
 
-        var userDistance = calcDistance(p1, p2);
+        if (calculatedDistance > 15000)
+        {
+            distanceScore = 1;
+        }
+        else if (calculatedDistance > 10000)
+        {
+            distanceScore = 5;
+        }
+        else if (calculatedDistance > 5000) {
+            distanceScore = 10;
+        }
+        else if (calculatedDistance > 2500) {
+            distanceScore = 20;
+        }
+        else if (calculatedDistance > 1250) {
+            distanceScore = 50;
+        }
+        else if (calculatedDistance > 750) {
+            distanceScore = 100;
+        }
+        else if (calculatedDistance > 500) {
+            distanceScore = 200;
+        }
+        else if (calculatedDistance > 250) {
+            distanceScore = 300;
+        }
+        else if (calculatedDistance > 100) {
+            distanceScore = 400;
+        }
+        else if (calculatedDistance > 50) {
+            distanceScore = 500;
+        }
+        else {
+            distanceScore = 1000;
+        }
 
-        var distanceScore = (earthRadius - userDistance) / 100 + 120;
+
+
 
         document.getElementById('<%= txtDistanceScore.ClientID %>').value = distanceScore;
 

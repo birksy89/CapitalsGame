@@ -82,7 +82,7 @@ namespace Christoc.Modules.CapitalsGame {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtDistanceScore;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtDistanceScore;
         
         /// <summary>
         /// btnReset control.
