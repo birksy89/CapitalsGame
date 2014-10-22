@@ -68,7 +68,7 @@ namespace Christoc.Modules.CapitalsGame
             {
                 userLives = Convert.ToInt32(Session["currentLives"]);
 
-                if (userLives < 0) // Checks to see if user has run out of lives
+                if (userLives < 1) // Checks to see if user has run out of lives
                 {
                     Output.Attributes.Add("class", "alert alert-warning text-center");
                     Output.InnerHtml = "<p><b>You have run out of Lives! Would you like to play again?</b></p>";
@@ -180,7 +180,7 @@ namespace Christoc.Modules.CapitalsGame
                 Output.InnerHtml = "<p><b>Correct!</b> The capital of " + txtCountry.InnerText.TrimEnd() + " is <b>" + correctAnswer + "</b></p>";
 
                 //Give Points
-                userScore += 1;
+                userScore += 100;
             }
             else
             {
@@ -188,7 +188,7 @@ namespace Christoc.Modules.CapitalsGame
                 Output.InnerHtml = "<p>Sorry, that's wrong...The capital of " + txtCountry.InnerText.TrimEnd() + " is <b>" + correctAnswer + "</b></p>";
 
                 //Take Points away
-                userScore -= 1;
+                userScore -= 100;
 
                 //Take Lives away
                 userLives -= 1;

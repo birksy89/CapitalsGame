@@ -34,7 +34,7 @@
 
         <div class="col-xs-12">
 
-            
+
             <div id="Output" runat="server" class="" role="alert"></div>
 
         </div>
@@ -53,30 +53,31 @@
             <p class="text-center">Move the pin to where you think the city is. The closer you are, the more points you will be awarded</p>
 
             <div id="map-canvas"></div>
+            <br />
 
-            <input type="button" value="I think it's in the right place..." onclick="codeAddress()" class="btn btn-primary btn-lg btn-block">
-
-
-
-            <input id="txtDistanceScore"  runat="server" value="0" />
-
-
+            <input type="button" value="I think it's in the right place..." onclick="codeAddress()" class="btn btn-success btn-lg btn-block">
         </div>
     </div>
 
     <br />
     <div class="row">
 
-        <div class="col-xs-12">
-
+        <div class="col-xs-12 col-md-6">
 
             <div class="input-group input-group-lg">
                 <div class="input-group-addon">You Placed It:</div>
-                <input class="form-control" id="txtDistance" type="text"  readonly="readonly" />
+                <input class="form-control" id="txtDistance" type="text" readonly="readonly" />
                 <div class="input-group-addon">Kms Away</div>
             </div>
 
+        </div>
 
+        <div class="col-xs-12 col-md-6">
+            <div class="input-group input-group-lg">
+                <div class="input-group-addon">Which Gives You:</div>
+                <input class="form-control distanceScore" id="txtDistanceScore" runat="server" value="0" type="text" readonly="readonly" />
+                <div class="input-group-addon">Points</div>
+            </div>
         </div>
     </div>
 
@@ -154,7 +155,7 @@
         }
 
 
-    input#txtDistance {
+    input#txtDistance, .distanceScore {
         text-align: center;
     }
 </style>
@@ -170,33 +171,31 @@
     var geocoder;
     var map;
 
+    var userMarker;
+
     var p1;
     var p2;
-
-    //var p1 = new google.maps.LatLng(51.5073509, -0.1277583); //London
-    //var p2 = new google.maps.LatLng(54.5311948, -1.5533484); //Darlington
 
     // Styles
     var mapStyle = [{ "stylers": [{ "visibility": "off" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "visibility": "on" }, { "saturation": 0 }, { "lightness": 0 }] }, { "featureType": "water", "stylers": [{ "visibility": "on" }, { "lightness": 0 }, { "saturation": 0 }] }, { "featureType": "administrative.province", "elementType": "geometry", "stylers": [{ "visibility": "on" }] }, { "featureType": "administrative.country", "elementType": "geometry", "stylers": [{ "visibility": "on" }] }, { "featureType": "water", "elementType": "labels", "stylers": [{ "visibility": "off" }] }, { "featureType": "road.local", "elementType": "geometry.fill", "stylers": [{ "visibility": "on" }, { "color": "#000000" }, { "lightness": 90 }] }];
     //End Style
 
     function initialize() {
+
         geocoder = new google.maps.Geocoder();
         var latlng = new google.maps.LatLng(25, 0);
+
         var mapOptions = {
             zoom: 2,
             center: latlng,
             styles: mapStyle
-
         }
-
-
 
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
 
         // Place a draggable marker on the map
-        var marker = new google.maps.Marker({
+        userMarker = new google.maps.Marker({
             position: latlng,
             map: map,
             draggable: true,
@@ -206,42 +205,60 @@
 
         p2 = latlng;
 
-        google.maps.event.addListener(marker, 'dragend', function (event) {
+        google.maps.event.addListener(userMarker, 'dragend', function (event) {
             p2 = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
         });
+
+
     }
 
     function codeAddress() {
+
+
+        //Stop the user from cheating by moving the marker again
+        userMarker.setDraggable(false);
+
         var address = document.getElementById('<%= txtCapital.ClientID %>').value;
+
         geocoder.geocode({ 'address': address }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
 
+                //Set P1 to the correct city location
                 p1 = results[0].geometry.location;
 
-                //map.setCenter(results[0].geometry.location);
 
-                map.panTo(p1);
-
-                var marker = new google.maps.Marker({
+                var cityMarker = new google.maps.Marker({
                     map: map,
-                    position: results[0].geometry.location,
+                    position: p1,
                     icon: 'http://mt.google.com/vt/icon?psize=30&font=fonts/arialuni_t.ttf&color=ff304C13&name=icons/spotlight/spotlight-waypoint-a.png&ax=43&ay=48&text=%E2%80%A2&scale=1'
                 });
 
+
+
+                var bound = new google.maps.LatLngBounds();
+
+                bound.extend(p1);
+                bound.extend(p2);
+                console.log(bound.getCenter());
+
+                //map.panTo(bound.getCenter());
+
+                map.fitBounds(bound);
+
                 calcDistance();
 
-            } else {
+            }
+            else {
                 alert('Geocode was not successful for the following reason: ' + status);
             }
         });
     }
 
+    //Initialise the map "on load".
     google.maps.event.addDomListener(window, 'load', initialize);
 
-    /////////////////////////////
-    function calcDistance() {
 
-        //alert(calcDistance(p1, p2) + " KMs");
+    function calcDistance() {
 
         var calculatedDistance = calcDistance(p1, p2);
 
@@ -257,12 +274,10 @@
 
         var distanceScore = 0;
 
-        if (calculatedDistance > 15000)
-        {
+        if (calculatedDistance > 15000) {
             distanceScore = 1;
         }
-        else if (calculatedDistance > 10000)
-        {
+        else if (calculatedDistance > 10000) {
             distanceScore = 5;
         }
         else if (calculatedDistance > 5000) {
@@ -293,19 +308,9 @@
             distanceScore = 1000;
         }
 
-
-
-
         document.getElementById('<%= txtDistanceScore.ClientID %>').value = distanceScore;
 
     }
-
-    ////////////
-
-
-
-
-
 
 
 
